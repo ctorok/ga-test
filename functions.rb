@@ -1,5 +1,4 @@
 require 'active_support/inflector' #this is so we can use pluralizer
-require 'pry-rails'
 
 COINS = {quarter: 25, dime: 10, nickel: 5, penny: 1}
 def make_change(amount)
@@ -34,7 +33,6 @@ end
 def pluralizer(coinage, i, k, coin_value)
   coinage > 1 || coinage == 0 ? sp = k[i].to_s.pluralize : sp = k[i].to_s
   amt = coinage * coin_value
-  # binding.pry
   i < 3 ? puts("   #{coinage} #{sp} (#{amt}), ") : puts("   and #{coinage} #{sp} (#{amt}).")
 end
 
@@ -53,9 +51,14 @@ end
 
 def calc_total(total, coin, value, multiplier)
   @total += (coin*value)
-  coin > 1 ? printer(coin, multiplier.to_s.pluralize) : printer(coin, multiplier.to_s)
-end
+  m_s = multiplier.to_s
+  m_p = multiplier.to_s.pluralize
 
-def printer(x, z)
-  @hold_response == z || z == "penny" || z == "pennies" ? @var += "#{x} #{z} = " : @var += "#{x} #{z}, "
+  if m_s == @hold_response || m_s == "penny"
+    coin > 1 ? m = m_p : m = m_s
+    @var += "#{coin} #{m} = "
+ else
+    coin > 1 ? m = m_p : m = m_s
+    @var += "#{coin} #{m}, "
+  end
 end
