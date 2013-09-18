@@ -32,13 +32,10 @@ def make_change(amount)
 end
 
 def pluralizer(coinage, i, k, coin_value)
-  if coinage > 1 || coinage == 0
-    sp = k[i].to_s.pluralize
-  else
-    sp = k[i].to_s
-  end
-    amt = coinage * coin_value
-    i < 3 ? puts("   #{coinage} #{sp} (#{amt}), ") : puts("   and #{coinage} #{sp} (#{amt}).")
+  coinage > 1 || coinage == 0 ? sp = k[i].to_s.pluralize : sp = k[i].to_s
+  amt = coinage * coin_value
+  # binding.pry
+  i < 3 ? puts("   #{coinage} #{sp} (#{amt}), ") : puts("   and #{coinage} #{sp} (#{amt}).")
 end
 
 def calculate_change(q, d, n, p)
@@ -46,21 +43,19 @@ def calculate_change(q, d, n, p)
   k = coins.keys
   v = coins.values
   @total = 0
+  @var = ""
   calc_total(@total, q, v[0], k[0]) if q != nil
   calc_total(@total, d, v[1], k[1]) if d != nil
   calc_total(@total, n, v[2], k[2]) if n != nil
   calc_total(@total, p, v[3], k[3]) if p != nil
-  puts "#{@total} cents"
+  puts "#{@var} #{@total} cents"
 end
 
 def calc_total(total, coin, value, multiplier)
   @total += (coin*value)
   coin > 1 ? printer(coin, multiplier.to_s.pluralize) : printer(coin, multiplier.to_s)
-  return @total
 end
 
 def printer(x, z)
-  if x != 0 || x != nil
-    print("#{x} #{z}, ")
-  end
+  @hold_response == z || z == "penny" || z == "pennies" ? @var += "#{x} #{z} = " : @var += "#{x} #{z}, "
 end
